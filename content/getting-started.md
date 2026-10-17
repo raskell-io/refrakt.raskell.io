@@ -207,7 +207,7 @@ refrakt gen auth
 | `data/migrations/002_create_users.sql` | The `users` table |
 | `test/blog/web/auth_handler_test.gleam` | Tests |
 
-Sessions are a signed cookie. Passwords are hashed with Argon2id through the [argus](https://hex.pm/packages/argus) package, which `gen auth` adds to your `gleam.toml`; argus compiles a small C library, so building it needs a C compiler.
+Sessions are a signed, expiring cookie, and cross-site form submissions are rejected with a 403. Passwords are hashed with Argon2id through the [argus](https://hex.pm/packages/argus) package, which `gen auth` adds to your `gleam.toml`; argus compiles a small C library, so building it needs a C compiler.
 
 Run the new migration:
 

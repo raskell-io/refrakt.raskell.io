@@ -64,6 +64,10 @@ refrakt new path/to/my_app    # the package is named my_app
 
 Writes the entry point, typed config (`PORT`, `SECRET_KEY_BASE`, `APP_ENV`), the shared `Context`, the router, a home handler, an error handler, the root layout, a flash component, CSS and JS in `priv/static/`, and tests. When `APP_ENV` is `dev` (the default), the router's middleware turns a crash into a page showing the error, the stack trace and the request; in `test` and `prod` it logs the crash and returns a plain 500. Set `APP_ENV=prod` in production.
 
+The middleware also blocks cross-site form submissions with `refrakt/csrf`: a `POST`, `PUT` or `DELETE` that a browser sends from another site gets a 403. It checks the `Sec-Fetch-Site`, `Origin` and `Referer` headers, so forms need no hidden token. Requests without those headers, such as `curl` or another server calling your JSON API, go through with their cookies removed.
+
+At startup the app refuses to run with a `SECRET_KEY_BASE` shorter than 64 bytes, and in `prod` also when it is missing or still the generated development value.
+
 ## gen resource
 
 ```sh
@@ -89,7 +93,16 @@ It needs a project created with `--db postgres` or `--db sqlite`; in a project w
 
 and adds seven routes to the router: `GET /posts`, `GET /posts/new`, `POST /posts`, `GET /posts/:id`, `GET /posts/:id/edit`, `PUT /posts/:id`, `DELETE /posts/:id`.
 
-**`--api`** writes a JSON handler, a params type, the domain type, the repo, the migration and tests, with no views or forms. It adds five routes under `/api/`: `GET` and `POST /api/posts`, and `GET`, `PUT`, `DELETE /api/posts/:id`. `index`, `show` and `delete` are complete; `create` and `update` return 501 with a TODO where you decode the JSON body.
+**`--api`** writes a JSON handler, a params type, the domain type, the repo, the migration and tests, with no views or forms. It adds five routes under `/api/`: `GET` and `POST /api/posts`, and `GET`, `PUT`, `DELETE /api/posts/:id`. All five handlers are complete. `create` and `update` decode the JSON body, validate it with the same rules as the HTML form, and answer:
+
+| Case | Status |
+|---|---|
+| created | 201, the record, and a `Location` header |
+| updated | 200, the record |
+| validation failed | 422, `{"errors": {"title": "Title is required"}}` |
+| wrong field types | 400, with details of what was expected |
+| unknown id | 404, `{"error": "not found"}` |
+| deleted | 204 |
 
 **`--belongs-to <parent>`** adds an `int` foreign key field named after the singular parent, such as `post_id`.
 
@@ -123,7 +136,7 @@ refrakt gen auth
 
 Writes the `User` domain type, password hashing in `domain/auth.gleam`, `data/user_repo.gleam`, a users migration, `web/auth_handler.gleam`, `web/auth_views.gleam`, `web/forms/auth_form.gleam`, `web/middleware/auth.gleam` and tests. Adds five routes: `GET` and `POST /login`, `GET` and `POST /register`, `POST /logout`. Like `gen resource`, it needs a project with a database.
 
-The session is a signed cookie. Protect a handler with the generated middleware:
+Sessions live in `web/session.gleam`: a signed, expiring token in an `HttpOnly`, `SameSite=Lax` cookie that lasts seven days, marked `Secure` in production. Logging in with an unknown email takes as long as a wrong password, so response times don't reveal which accounts exist. Protect a handler with the generated middleware:
 
 ```gleam
 pub fn create(req: Request, ctx: Context) -> Response {
@@ -179,7 +192,7 @@ GET     /posts/:id          post_handler.show
 refrakt migrate
 ```
 
-The first time, writes `src/<app>/migrate.gleam`, a module that connects to your database and calls `refrakt/migrate`. Then runs it with `gleam run -m <app>/migrate`. Pending `.sql` files in `data/migrations/` are applied in order and recorded in a `_migrations` table. There are no down migrations.
+The first time, writes `src/<app>/migrate.gleam`, a module that connects to your database and calls `refrakt/migrate`. Then runs it with `gleam run -m <app>/migrate`. Pending `.sql` files in `data/migrations/` are applied in order and recorded in a `_migrations` table. A file may hold several statements, and each file runs in one transaction: if any statement fails, the whole migration is rolled back, not recorded, and the error names the file. There are no down migrations.
 
 ## seed
 
