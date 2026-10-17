@@ -24,7 +24,7 @@ paths = "on"
 anchors = "on"
 
 [extra]
-author = "raskell.io"
+author = "Refrakt contributors"
 pitch = "A convention-first web framework for Gleam"
 tagline = "Productive like Phoenix, explicit like Gleam, composable with Wisp and Lustre."
 version = "0.2.0"

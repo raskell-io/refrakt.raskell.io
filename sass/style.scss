@@ -1,7 +1,9 @@
 // Refrakt website
-// Palette from the logo's facets: midnight, indigo, blue, cyan, lavender, Gleam pink.
-// Geist and Geist Mono.
+// Surfaces borrow Gleam's own palette (aged plastic yellow, underwater blue,
+// faff pink, unnamed blue); the crystal keeps Refrakt's facet colours.
+// Clash Display and Satoshi, IBM Plex Mono for code.
 
+// Crystal facets
 $ink: #1b1f3b;
 $ink-deep: #0f1122;
 $indigo: #2e3a8c;
@@ -10,55 +12,67 @@ $cyan: #7ee0ff;
 $lavender: #c3b5ff;
 $pink: #ffaff3;
 
+// Gleam's palette
+$underwater: #292d3e;
+$lukewarm: #313546;
+$aged: #fffbe8;
+$aubergine: #584355;
+$unnamed: #a6f0fc;
+$gleam-text: #f0eeff;
+
 @mixin light {
-    --bg: #f8f9fd;
-    --bg-alt: #eef1fa;
+    --bg: #{$aged};
+    --bg-alt: #fefefc;
     --surface: #ffffff;
-    --text: #{$ink};
-    --muted: #535a7a;
-    --line: #dde2f0;
-    --link: #2556d9;
-    --link-hover: #b8178a;
-    --btn-bg: #{$ink};
-    --btn-text: #ffffff;
-    --btn-hover: #2a305a;
-    --code-inline-bg: #e8ecfa;
-    --code-inline-text: #{$indigo};
-    --code-bg: #12152b;
-    --code-bar: #1a1e38;
-    --shadow: 0 1px 2px rgba(27, 31, 59, 0.06), 0 8px 24px rgba(27, 31, 59, 0.08);
-    --accent: #2556d9;
-    --glow: 0.9;
+    --text: #{$underwater};
+    --muted: #5a5e75;
+    --line: #ebe2c3;
+    --link: #a3318f;
+    --link-hover: #{$underwater};
+    --btn-bg: #{$pink};
+    --btn-text: #{$underwater};
+    --btn-hover: #ff96ef;
+    --code-inline-bg: #fde3f8;
+    --code-inline-text: #{$aubergine};
+    --code-bg: #{$underwater};
+    --code-bar: #{$lukewarm};
+    --shadow: 0 1px 2px rgba(41, 45, 62, 0.06), 0 10px 28px rgba(88, 67, 85, 0.1);
+    --accent: #a3318f;
+    --kicker-bg: #fde3f8;
+    --glow: 1;
+    --cta-bg: #{$underwater};
     color-scheme: light;
 }
 
 @mixin dark {
-    --bg: #{$ink-deep};
-    --bg-alt: #151933;
-    --surface: #1a1f3d;
-    --text: #e8ebf7;
-    --muted: #9ea6c8;
-    --line: #2a3058;
-    --link: #{$cyan};
-    --link-hover: #c4f1ff;
-    --btn-bg: #{$cyan};
-    --btn-text: #{$ink-deep};
-    --btn-hover: #a8ecff;
-    --code-inline-bg: #232a52;
-    --code-inline-text: #{$lavender};
-    --code-bg: #0b0d1c;
-    --code-bar: #12152b;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
-    --accent: #{$cyan};
-    --glow: 0.55;
+    --bg: #{$underwater};
+    --bg-alt: #{$lukewarm};
+    --surface: #393e55;
+    --text: #{$gleam-text};
+    --muted: #bcc2e0;
+    --line: #474c66;
+    --link: #{$unnamed};
+    --link-hover: #fefefc;
+    --btn-bg: #{$pink};
+    --btn-text: #{$underwater};
+    --btn-hover: #ffc8f7;
+    --code-inline-bg: #41465e;
+    --code-inline-text: #ffddfa;
+    --code-bg: #1f2230;
+    --code-bar: #282c3c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 10px 28px rgba(0, 0, 0, 0.22);
+    --accent: #{$pink};
+    --kicker-bg: rgba(255, 175, 243, 0.14);
+    --glow: 0.45;
+    --cta-bg: #{$aubergine};
     color-scheme: dark;
 }
 
 :root {
     @include light;
-    --font: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font: "Satoshi", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
     --display: "Clash Display", var(--font);
-    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     --wrap: 1120px;
     --radius: 10px;
 }
@@ -182,28 +196,6 @@ pre {
         z-index: 10;
         background: var(--surface);
         padding: 0.5rem 1rem;
-    }
-}
-
-// The three beams, as a rule across the top of every page
-.spectrum {
-    display: flex;
-    flex-direction: column;
-
-    span {
-        height: 3px;
-    }
-
-    span:nth-child(1) {
-        background: $pink;
-    }
-
-    span:nth-child(2) {
-        background: $cyan;
-    }
-
-    span:nth-child(3) {
-        background: $blue;
     }
 }
 
@@ -349,7 +341,7 @@ pre {
     margin: 0 0 1.25rem;
     padding: 1rem 1.15rem;
     background: var(--code-bg);
-    color: #e6e9f6;
+    color: #{$gleam-text};
     border-radius: var(--radius);
     overflow-x: auto;
     line-height: 1.55;
@@ -367,30 +359,30 @@ pre {
 // Token colours for giallo's class-based highlighting (same in both themes:
 // code always sits on the dark surface)
 .z-comment {
-    color: #7f87a8;
+    color: #9a9a9a;
     font-style: italic;
 }
 
 .z-keyword,
 .z-storage {
-    color: $pink;
+    color: #{$pink};
 }
 
 .z-entity {
-    color: #a9c4ff;
+    color: #9ce7ff;
 }
 
 .z-string {
-    color: #a8e6c9;
+    color: #c8ffa7;
 }
 
 .z-constant,
 .z-support {
-    color: #ffd29e;
+    color: #ffd596;
 }
 
 .z-variable {
-    color: #e6e9f6;
+    color: #{$gleam-text};
 }
 
 // Shell: keep arguments plain so commands read as commands
@@ -429,16 +421,13 @@ code[data-lang="shellscript"] .z-string {
 
 .kicker,
 .eyebrow {
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 0 0 0.9rem;
-}
-
-.kicker {
+    display: inline-block;
+    margin: 0 0 1rem;
+    padding: 0.2rem 0.75rem;
+    border-radius: 999px;
+    background: var(--kicker-bg);
     color: var(--accent);
+    font: 700 0.85rem var(--font);
 }
 
 .hero {
@@ -458,9 +447,9 @@ code[data-lang="shellscript"] .z-string {
     inset: -20% -10% auto;
     height: 640px;
     background:
-        radial-gradient(closest-side at 38% 40%, rgba(255, 175, 243, 0.35), transparent),
-        radial-gradient(closest-side at 62% 38%, rgba(126, 224, 255, 0.35), transparent),
-        radial-gradient(closest-side at 50% 62%, rgba(63, 124, 255, 0.25), transparent);
+        radial-gradient(closest-side at 36% 42%, rgba(255, 175, 243, 0.55), transparent),
+        radial-gradient(closest-side at 64% 38%, rgba(166, 240, 252, 0.55), transparent),
+        radial-gradient(closest-side at 50% 66%, rgba(195, 181, 255, 0.3), transparent);
     filter: blur(40px);
     opacity: var(--glow);
     pointer-events: none;
@@ -623,7 +612,7 @@ code[data-lang="shellscript"] .z-string {
     gap: 0.75rem;
     padding: 0.6rem 0.9rem;
     background: var(--code-bar);
-    color: #8f98bd;
+    color: #b3b8d4;
     font: 0.78rem var(--mono);
 }
 
@@ -677,7 +666,7 @@ code[data-lang="shellscript"] .z-string {
 }
 
 .beam-web { stroke: $pink; }
-.beam-domain { stroke: $cyan; }
+.beam-domain { stroke: $unnamed; }
 .beam-data { stroke: $blue; }
 .beam-test { stroke: var(--muted); opacity: 0.5; }
 
@@ -734,7 +723,7 @@ code[data-lang="shellscript"] .z-string {
 }
 
 .file-web { border-left-color: $pink !important; }
-.file-domain { border-left-color: $cyan !important; }
+.file-domain { border-left-color: $unnamed !important; }
 .file-data { border-left-color: $blue !important; }
 
 .refraction-note {
@@ -819,7 +808,7 @@ code[data-lang="shellscript"] .z-string {
         margin: 0;
         padding: 0.6rem 1.15rem;
         background: var(--code-bar);
-        color: #8f98bd;
+        color: #b3b8d4;
         font: 0.78rem var(--mono);
     }
 
@@ -861,7 +850,7 @@ code[data-lang="shellscript"] .z-string {
     gap: 0.4rem 1rem;
     padding: 1.1rem 1.25rem;
     border-radius: 12px;
-    color: $ink-deep;
+    color: $underwater;
 
     b {
         font: 600 1.05rem var(--mono);
@@ -873,7 +862,7 @@ code[data-lang="shellscript"] .z-string {
 }
 
 .layer-web { background: $pink; }
-.layer-domain { background: $cyan; }
+.layer-domain { background: $unnamed; }
 .layer-data { background: $blue; color: #fff; }
 
 .layer-arrows {
@@ -1023,11 +1012,10 @@ code[data-lang="shellscript"] .z-string {
 .cta {
     position: relative;
     background:
-        radial-gradient(60% 120% at 85% 50%, rgba(63, 124, 255, 0.28), transparent 70%),
-        radial-gradient(40% 80% at 70% 0%, rgba(255, 175, 243, 0.14), transparent 70%),
-        #151936;
-    border-top: 1px solid #262c50;
-    color: #e8ebf7;
+        radial-gradient(60% 120% at 85% 50%, rgba(166, 240, 252, 0.18), transparent 70%),
+        radial-gradient(40% 80% at 70% 0%, rgba(255, 175, 243, 0.2), transparent 70%),
+        var(--cta-bg);
+    color: #{$gleam-text};
     padding: 4.5rem 0;
     overflow: hidden;
 
@@ -1037,31 +1025,31 @@ code[data-lang="shellscript"] .z-string {
     }
 
     p {
-        color: #aeb6d6;
+        color: #d6d9ee;
         max-width: 34rem;
     }
 
     code {
-        background: #232a52;
-        color: $lavender;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffddfa;
     }
 
     .btn-primary {
-        background: $cyan;
-        color: $ink-deep;
+        background: $pink;
+        color: $underwater;
 
         &:hover {
-            background: #a8ecff;
-            color: $ink-deep;
+            background: #ffc8f7;
+            color: $underwater;
         }
     }
 
     .btn-ghost {
-        border-color: #3a4170;
-        color: #e8ebf7;
+        border-color: rgba(255, 255, 255, 0.28);
+        color: $gleam-text;
 
         &:hover {
-            border-color: #8f98bd;
+            border-color: #b3b8d4;
             color: #fff;
         }
     }
@@ -1285,9 +1273,7 @@ code[data-lang="shellscript"] .z-string {
 
 .footer-head {
     margin: 0 0 0.35rem;
-    font: 500 0.75rem var(--mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font: 700 0.9rem var(--font);
     color: var(--text);
 }
 

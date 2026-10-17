@@ -24,8 +24,8 @@
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     {%- endblock meta %}
-    <meta name="theme-color" content="#f8f9fd" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#0f1122" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#fffbe8" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#292d3e" media="(prefers-color-scheme: dark)">
     <link rel="icon" href="{{ get_url(path='favicon.ico') }}" sizes="48x48">
     <link rel="icon" href="{{ get_url(path='img/logo.svg') }}" type="image/svg+xml">
     <link rel="icon" href="{{ get_url(path='favicon.png') }}" type="image/png" sizes="32x32">
@@ -33,9 +33,9 @@
     <link rel="manifest" href="{{ get_url(path='site.webmanifest') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap">
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
-    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap">
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@400,500,700&display=swap">
     <link rel="stylesheet" href="{{ get_url(path='style.css', cachebust=true) }}">
     <script>
         // Apply a stored theme choice before first paint; otherwise follow the system.
@@ -49,7 +49,6 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
     <a class="skip" href="#main">Skip to content</a>
-    <div class="spectrum" aria-hidden="true"><span></span><span></span><span></span></div>
     <header class="site-header">
         <div class="wrap header-row">
             <a class="brand" href="{{ get_url(path='/') }}"><img src="{{ get_url(path='img/logo.svg') }}" alt="" width="28" height="28">Refrakt</a>
@@ -95,7 +94,7 @@
             </nav>
         </div>
         <div class="wrap footer-base">
-            <span>© {{ now() | date(format="%Y") }} raskell.io</span>
+            <span>© {{ now() | date(format="%Y") }} Refrakt contributors · MIT license</span>
             <span class="spectrum-dots" aria-hidden="true"><i></i><i></i><i></i></span>
         </div>
     </footer>

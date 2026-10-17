@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <!-- Social card source; render with scripts/render-icons.sh (needs the Geist font installed). -->
-  <rect width="1200" height="630" fill="#0f1122"/>
+  <rect width="1200" height="630" fill="#292d3e"/>
   <g transform="translate(780 150) scale(5.2)" stroke-width="0.6" stroke-linejoin="round" opacity="0.95">
     <polygon points="32,2 27.5,28.5 58,17" fill="#3346b8" stroke="#3346b8"/>
     <polygon points="58,17 27.5,28.5 58,47" fill="#3f7cff" stroke="#3f7cff"/>
@@ -28,9 +28,9 @@
      style="font-weight:700;font-size:60px;font-family:'Clash Display';letter-spacing:0.5;fill:#f1efff"
      aria-label="Refrakt" />
   </g>
-  <text font-family="Geist" font-weight="400" font-size="38" fill="#d5dbf2">
+  <text font-family="Geist" font-weight="400" font-size="38" fill="#f0eeff">
     <tspan x="80" y="360">A convention-first</tspan>
     <tspan x="80" y="408">web framework for Gleam.</tspan>
   </text>
-  <text x="80" y="540" font-family="Geist" font-weight="500" font-size="24" fill="#8f98bd">refrakt.raskell.io</text>
+  <text x="80" y="540" font-family="Geist" font-weight="500" font-size="24" fill="#ffaff3">refrakt.raskell.io</text>
 </svg>

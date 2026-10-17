@@ -23,9 +23,9 @@ render static/img/logo.svg 512 512 static/icon-512.png
 # iOS and Android want an opaque square and mask the corners themselves.
 # The crystal sits on the light page colour; maskable keeps it inside the 80% safe zone.
 render static/img/logo.svg 128 128 "$tmp/touch.png"
-magick -size 180x180 xc:'#f8f9fd' "$tmp/touch.png" -gravity center -composite static/apple-touch-icon.png
+magick -size 180x180 xc:'#fffbe8' "$tmp/touch.png" -gravity center -composite static/apple-touch-icon.png
 render static/img/logo.svg 300 300 "$tmp/mask.png"
-magick -size 512x512 xc:'#f8f9fd' "$tmp/mask.png" -gravity center -composite static/icon-maskable-512.png
+magick -size 512x512 xc:'#fffbe8' "$tmp/mask.png" -gravity center -composite static/icon-maskable-512.png
 
 render art/og-image.svg 1200 630 static/img/og-image.png
 echo "Icons rendered."
