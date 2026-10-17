@@ -9,7 +9,7 @@ next = { title = "CLI reference", url = "/cli/" }
 
 ## What you need
 
-- [Gleam](https://gleam.run/getting-started/) 1.14 or later
+- [Gleam](https://gleam.run/getting-started/installing/) 1.14 or later
 - Erlang/OTP 27 or later, and rebar3
 - PostgreSQL running locally for this tutorial. With `--db sqlite` you need no database server at all.
 

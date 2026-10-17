@@ -4,152 +4,169 @@
 {%- set tour = load_data(path="data/tour.toml") %}
 
 <section class="hero">
-    <div class="wrap hero-grid">
-        <div class="hero-copy">
-            <p class="eyebrow">Gleam · BEAM · v{{ config.extra.version }} on Hex</p>
-            <h1 class="title">A convention-first web framework for Gleam.</h1>
-            <p class="hero-pitch">{{ config.extra.tagline }}</p>
-            <p class="hero-sub">Light enters a prism, structure emerges. Refrakt takes Wisp, Lustre and Mist and gives you one obvious way to build web apps: a CLI that generates plain Gleam code you own, and a small library for validation, flash messages, migrations and tests. No macros, no magic.</p>
-            <div class="actions">
-                <a class="btn btn-primary" href="/getting-started/">Get started</a>
-                <a class="btn btn-ghost" href="{{ config.extra.github }}">GitHub</a>
-                <a class="btn btn-ghost" href="{{ config.extra.hexdocs }}">HexDocs</a>
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+        <svg class="hero-crystal" viewBox="0 0 64 64" aria-hidden="true">
+            <g stroke-width="0.6" stroke-linejoin="round">
+                <polygon class="f f2" points="32,2 27.5,28.5 58,17"/>
+                <polygon class="f f3" points="58,17 27.5,28.5 58,47"/>
+                <polygon class="f f4" points="58,47 27.5,28.5 32,62"/>
+                <polygon class="f f5" points="32,62 27.5,28.5 6,47"/>
+                <polygon class="f f6" points="6,47 27.5,28.5 6,17"/>
+                <polygon class="f f1" points="6,17 27.5,28.5 32,2"/>
+            </g>
+        </svg>
+        <p class="eyebrow">A web framework for Gleam on the BEAM</p>
+        <h1 class="title">One obvious way to build Gleam web apps.</h1>
+        <p class="hero-pitch">Refrakt is a CLI that generates plain Gleam code you own, built on Wisp, Lustre and Mist. {{ config.extra.tagline }}</p>
+        <div class="install">
+            <code id="install-cmd">gleam add refrakt</code>
+            <button class="copy" type="button" data-copy="install-cmd" aria-label="Copy install command">Copy</button>
+        </div>
+        <div class="actions actions-center">
+            <a class="btn btn-primary" href="/getting-started/">Get started</a>
+            <a class="btn btn-ghost" href="{{ config.extra.github }}">View on GitHub</a>
+        </div>
+    </div>
+</section>
+
+<section class="band refraction-band" aria-labelledby="refraction-title">
+    <div class="wrap">
+        <div class="section-head">
+            <p class="kicker">Generators</p>
+            <h2 class="section-title" id="refraction-title">One command in, a whole resource out</h2>
+            <p class="section-lead"><code>gen resource</code> writes the handler, views, form, domain type, repo, migration and test for a resource, wires seven routes into your router, and runs <code>gleam format</code> on all of it.</p>
+        </div>
+        <div class="refraction">
+            <figure class="terminal">
+                <div class="terminal-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>blog</span></div>
+{{ "```sh
+refrakt gen resource posts \
+  title:string body:text \
+  published:bool
+```" | markdown | safe }}
+            </figure>
+            <svg class="beams" viewBox="0 0 100 320" preserveAspectRatio="none" aria-hidden="true">
+                {%- set ys = [20, 60, 100, 140, 180, 220, 260, 300] %}
+                {%- set cls = ["web", "web", "web", "web", "domain", "data", "data", "test"] %}
+                {%- for y in ys %}
+                <path class="beam beam-{{ cls[loop.index0] }}" d="M0,160 C45,160 55,{{ y }} 100,{{ y }}"/>
+                {%- endfor %}
+            </svg>
+            <ul class="files">
+                <li class="file-web"><span class="tag">web</span><code>router.gleam</code><em>updated</em></li>
+                <li class="file-web"><span class="tag">web</span><code>web/post_handler.gleam</code></li>
+                <li class="file-web"><span class="tag">web</span><code>web/post_views.gleam</code></li>
+                <li class="file-web"><span class="tag">web</span><code>web/forms/post_form.gleam</code></li>
+                <li class="file-domain"><span class="tag">domain</span><code>domain/post.gleam</code></li>
+                <li class="file-data"><span class="tag">data</span><code>data/post_repo.gleam</code></li>
+                <li class="file-data"><span class="tag">data</span><code>data/migrations/001_create_posts.sql</code></li>
+                <li class="file-test"><span class="tag">test</span><code>test/…/post_handler_test.gleam</code></li>
+            </ul>
+        </div>
+        <p class="refraction-note">Add <code>--api</code> for a JSON handler under <code>/api/</code>, or <code>--belongs-to posts</code> for a foreign key. Prefer SQLite? Create the project with <code>--db sqlite</code>.</p>
+    </div>
+</section>
+
+<section class="band band-alt" id="tour" aria-labelledby="tour-title">
+    <div class="wrap">
+        <div class="section-head">
+            <p class="kicker">The generated code</p>
+            <h2 class="section-title" id="tour-title">Code you'd write by hand</h2>
+            <p class="section-lead">Excerpts from a fresh <code>refrakt new blog</code> with a <code>posts</code> resource, unedited.</p>
+        </div>
+        <div class="tour">
+            {%- for step in tour.step %}
+            <input class="tour-radio" type="radio" name="tour" id="tour-{{ loop.index }}"{% if loop.first %} checked{% endif %}>
+            {%- endfor %}
+            <div class="tour-tabs" role="presentation">
+                {%- for step in tour.step %}
+                <label class="tour-tab" for="tour-{{ loop.index }}"><span class="tour-num">0{{ loop.index }}</span>{{ step.title }}</label>
+                {%- endfor %}
+            </div>
+            <div class="tour-panels">
+                {%- for step in tour.step %}
+                <div class="tour-panel tour-panel-{{ loop.index }}">
+                    <p class="tour-text">{{ step.text }}</p>
+                    <div class="tour-code">
+                        <p class="file">{{ step.file }}</p>
+                        {{ "```gleam
+" ~ step.code ~ "
+```" | markdown | safe }}
+                    </div>
+                </div>
+                {%- endfor %}
             </div>
         </div>
-        <figure class="terminal">
-            <div class="terminal-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>quickstart</span></div>
-{{ "```sh
-# inside any Gleam project
-gleam add refrakt
-gleam run -m refrakt/cli -- new my_app --db postgres
-cd my_app
-
-# a full CRUD resource, wired into the router
-gleam run -m refrakt/cli -- gen resource posts \
-  title:string body:text published:bool
-
-gleam run
-# → http://localhost:4000/posts
-```" | markdown | safe }}
-            <figcaption>Prefer SQLite? Use <code>--db sqlite</code>, no database server needed.</figcaption>
-        </figure>
     </div>
 </section>
 
-<section class="band band-alt">
+<section class="band" aria-labelledby="layers-title">
     <div class="wrap two-col">
         <div>
-            <h2 class="section-title">One command, full CRUD</h2>
-            <p class="section-lead"><code>refrakt gen resource</code> writes a handler with seven actions, Lustre views, a typed form with validation, a domain type, a repo with raw SQL, a migration and tests. Then it adds the routes to your router and runs <code>gleam format</code> on everything it wrote.</p>
-            <p>Add <code>--api</code> for a JSON handler under <code>/api/</code> instead of HTML views, or <code>--belongs-to posts</code> to add a <code>post_id</code> foreign key.</p>
+            <p class="kicker">Structure</p>
+            <h2 class="section-title" id="layers-title">Three layers, one direction</h2>
+            <p class="section-lead">Every Refrakt app has the same shape. The web layer handles HTTP and HTML, the domain holds your types and logic, the data layer talks to the database.</p>
+            <p class="muted">Domain modules import no Wisp, Lustre, Pog or Sqlight: just your types and functions.</p>
         </div>
-        <div class="output">
-{{ "```text
-$ refrakt gen resource posts \
-    title:string body:text published:bool
-
-Created:
-  src/blog/web/post_handler.gleam
-  src/blog/web/post_views.gleam
-  src/blog/web/forms/post_form.gleam
-  src/blog/domain/post.gleam
-  src/blog/data/post_repo.gleam
-  src/blog/data/migrations/001_create_posts.sql
-  test/blog/web/post_handler_test.gleam
-
-Updated:
-  src/blog/router.gleam
-```" | markdown | safe }}
+        <div class="layers">
+            <div class="layer layer-web"><b>web/</b><span>handlers, views, forms, layouts, middleware</span></div>
+            <div class="layer-arrows" aria-hidden="true"><span>↓</span><span>↓</span></div>
+            <div class="layer layer-domain"><b>domain/</b><span>pure Gleam types and functions</span></div>
+            <div class="layer-arrows" aria-hidden="true"><span>↑</span></div>
+            <div class="layer layer-data"><b>data/</b><span>repos with raw SQL, migrations</span></div>
+            <p class="layer-caption"><span class="ok">✓</span> web → domain, data <span class="ok">✓</span> data → domain <span class="no">✗</span> domain → anything</p>
         </div>
     </div>
 </section>
 
-<section class="band">
-    <div class="wrap">
-        <h2 class="section-title">Principles</h2>
-        <p class="section-lead">Before anything is added to Refrakt, it has to make a new Gleam developer more productive in their first hour.</p>
+<section class="band band-alt" aria-labelledby="principles-title">
+    <div class="wrap two-col two-col-top">
+        <div class="sticky">
+            <p class="kicker">Principles</p>
+            <h2 class="section-title" id="principles-title">Five rules Refrakt holds to</h2>
+            <p class="section-lead">Before anything is added to Refrakt, it has to make a new Gleam developer more productive in their first hour.</p>
+        </div>
         <ol class="principles">
-            <li><b>Conventions over assembly.</b> One project layout, one routing shape, one way to structure handlers, views, forms and repos. Spend your time on features, not on file organisation.</li>
-            <li><b>Generated code is your code.</b> Every file the CLI writes is plain Gleam you can read, change and keep. There is no hidden framework layer behind it.</li>
-            <li><b>No magic, no macros.</b> Gleam has no metaprogramming and Refrakt doesn't fake it. Routing is pattern matching, views are functions, validation is functions.</li>
-            <li><b>Built on the ecosystem.</b> Wisp handles HTTP, Lustre renders HTML, Mist serves it, Pog or Sqlight talk to the database. Refrakt adds conventions and generators on top.</li>
+            <li><b>Conventions over assembly.</b> One project layout, one routing shape, one way to structure handlers, views, forms and repos.</li>
+            <li><b>Generated code is your code.</b> Every file the CLI writes is plain Gleam you can read, change and keep. There is no hidden framework layer.</li>
+            <li><b>No magic, no macros.</b> Routing is pattern matching, views are functions, validation is functions.</li>
+            <li><b>Built on the ecosystem.</b> Wisp handles HTTP, Lustre renders HTML, Mist serves it, Pog or Sqlight talk to the database.</li>
             <li><b>Boring where boring is good.</b> CRUD, forms, validation, sessions and layouts come first, and they should just work.</li>
         </ol>
     </div>
 </section>
 
-<section class="band band-alt" id="tour">
+<section class="band" aria-labelledby="commands-title">
     <div class="wrap">
-        <h2 class="section-title">A tour of the generated code</h2>
-        <p class="section-lead">This is what <code>refrakt new blog --db postgres</code> followed by <code>refrakt gen resource posts title:string body:text published:bool</code> writes. Excerpts, unedited.</p>
-        <ol class="tour">
-            {%- for step in tour.step %}
-            <li class="tour-step">
-                <div class="tour-text">
-                    <p class="tour-num">{{ loop.index }}</p>
-                    <h3>{{ step.title }}</h3>
-                    <p>{{ step.text }}</p>
-                </div>
-                <div class="tour-code">
-                    <p class="file">{{ step.file }}</p>
-                    {{ "```gleam
-" ~ step.code ~ "
-```" | markdown | safe }}
-                </div>
-            </li>
-            {%- endfor %}
-        </ol>
-    </div>
-</section>
-
-<section class="band">
-    <div class="wrap two-col">
-        <div>
-            <h2 class="section-title">Three layers, one direction</h2>
-            <p class="section-lead">Every Refrakt app has the same shape. The web layer handles HTTP and HTML, the domain holds your types and logic, the data layer talks to the database.</p>
-            <ul class="rules">
-                <li><span class="ok" aria-label="allowed">✓</span> <code>web/</code> → <code>domain/</code>, <code>data/</code></li>
-                <li><span class="ok" aria-label="allowed">✓</span> <code>data/</code> → <code>domain/</code></li>
-                <li><span class="no" aria-label="not allowed">✗</span> <code>domain/</code> → <code>web/</code>, <code>data/</code></li>
-            </ul>
-            <p class="muted">Domain modules have no Wisp, Lustre, Pog or Sqlight imports: just your types and functions.</p>
+        <div class="section-head">
+            <p class="kicker">CLI</p>
+            <h2 class="section-title" id="commands-title">The commands</h2>
+            <p class="section-lead">A code generator and a few dev helpers. Your app never calls the CLI at runtime.</p>
         </div>
-        <div class="layers" role="list">
-            <div class="layer layer-web" role="listitem"><b>web/</b><span>handlers, views, forms, layouts, components, middleware</span></div>
-            <div class="layer layer-domain" role="listitem"><b>domain/</b><span>pure Gleam types and functions</span></div>
-            <div class="layer layer-data" role="listitem"><b>data/</b><span>repos with raw SQL, migrations</span></div>
-        </div>
-    </div>
-</section>
-
-<section class="band band-alt">
-    <div class="wrap">
-        <h2 class="section-title">The commands</h2>
-        <p class="section-lead">The CLI is a code generator and a few dev helpers. Your app never calls it at runtime.</p>
-        <div class="table-wrap">
-        <table class="commands">
-            <tbody>
-                <tr><td><code>new &lt;name&gt;</code></td><td>Create a project, optionally with <code>--db postgres</code> or <code>--db sqlite</code></td></tr>
-                <tr><td><code>gen resource &lt;name&gt; &lt;fields…&gt;</code></td><td>Full CRUD: handler, views, form, domain type, repo, migration, tests</td></tr>
-                <tr><td><code>gen page &lt;name&gt;</code></td><td>A handler and a GET route</td></tr>
-                <tr><td><code>gen auth</code></td><td>Register, login, logout, sessions and a <code>require_auth</code> middleware</td></tr>
-                <tr><td><code>gen island &lt;name&gt;</code></td><td>A Lustre client-side island and its embed helper</td></tr>
-                <tr><td><code>gen live &lt;name&gt;</code></td><td>A Lustre server component over WebSocket</td></tr>
-                <tr><td><code>gen migration &lt;name&gt;</code></td><td>An empty, numbered SQL migration</td></tr>
-                <tr><td><code>migrate</code> · <code>seed</code></td><td>Run pending migrations · run seeds</td></tr>
-                <tr><td><code>routes</code></td><td>Print the route table from <code>router.gleam</code></td></tr>
-                <tr><td><code>dev</code> · <code>build</code></td><td>Dev server with rebuild on change · compile islands to JavaScript</td></tr>
-            </tbody>
-        </table>
-        </div>
+        <dl class="commands">
+            <div><dt><code>new &lt;name&gt;</code></dt><dd>A project, with <code>--db postgres</code> or <code>--db sqlite</code></dd></div>
+            <div><dt><code>gen resource</code></dt><dd>Full CRUD: handler, views, form, domain, repo, migration, test</dd></div>
+            <div><dt><code>gen auth</code></dt><dd>Register, login, logout, sessions and <code>require_auth</code></dd></div>
+            <div><dt><code>gen page</code></dt><dd>A handler and a GET route</dd></div>
+            <div><dt><code>gen island</code></dt><dd>A Lustre client-side island</dd></div>
+            <div><dt><code>gen live</code></dt><dd>A Lustre server component over WebSocket</dd></div>
+            <div><dt><code>gen migration</code></dt><dd>An empty, numbered SQL migration</dd></div>
+            <div><dt><code>migrate</code> · <code>seed</code></dt><dd>Run pending migrations, run seeds</dd></div>
+            <div><dt><code>routes</code></dt><dd>Print the route table</dd></div>
+            <div><dt><code>dev</code> · <code>build</code></dt><dd>Rebuild on change, compile islands to JS</dd></div>
+        </dl>
         <p><a class="more" href="/cli/">Full CLI reference →</a></p>
     </div>
 </section>
 
-<section class="band">
+<section class="band band-alt" aria-labelledby="stack-title">
     <div class="wrap">
-        <h2 class="section-title">Built on</h2>
-        <p class="section-lead">If Wisp or Lustre already does it, Refrakt doesn't rebuild it.</p>
+        <div class="section-head">
+            <p class="kicker">Built on</p>
+            <h2 class="section-title" id="stack-title">The Gleam ecosystem, not a replacement for it</h2>
+            <p class="section-lead">If Wisp or Lustre already does it, Refrakt doesn't rebuild it.</p>
+        </div>
         <ul class="stack">
             <li><a href="https://github.com/gleam-wisp/wisp"><b>Wisp</b><span>HTTP handlers, middleware, requests and responses</span></a></li>
             <li><a href="https://github.com/lustre-labs/lustre"><b>Lustre</b><span>HTML views, islands, server components</span></a></li>
@@ -160,19 +177,26 @@ Updated:
     </div>
 </section>
 
-<section class="band band-alt">
-    <div class="wrap intro">
-        <div class="prose-wide">
-            {{ section.content | safe }}
+<section class="cta" aria-labelledby="cta-title">
+    <div class="wrap cta-inner">
+        <div>
+            <h2 id="cta-title">Build a blog in ten minutes</h2>
+            <p>The tutorial goes from <code>refrakt new</code> to posts, authentication and an about page. Free and open source under the MIT license.</p>
             <div class="actions">
-                <a class="btn btn-primary" href="/getting-started/">Build a blog in ten minutes</a>
-                <a class="btn btn-ghost" href="{{ config.extra.hex }}">Hex package</a>
+                <a class="btn btn-primary" href="/getting-started/">Start the tutorial</a>
+                <a class="btn btn-ghost" href="{{ config.extra.hexdocs }}">API docs</a>
             </div>
         </div>
-        <a class="seal" href="https://raskell.io">
-            <img src="{{ get_url(path='img/raskell-stamp.png') }}" alt="The raskell.io seal" width="160" height="160" loading="lazy">
-            <span>produced by <b>raskell.io</b></span>
-        </a>
+        <svg class="cta-crystal" viewBox="0 0 64 64" aria-hidden="true">
+            <g stroke-width="0.6" stroke-linejoin="round">
+                <polygon class="f f2" points="32,2 27.5,28.5 58,17"/>
+                <polygon class="f f3" points="58,17 27.5,28.5 58,47"/>
+                <polygon class="f f4" points="58,47 27.5,28.5 32,62"/>
+                <polygon class="f f5" points="32,62 27.5,28.5 6,47"/>
+                <polygon class="f f6" points="6,47 27.5,28.5 6,17"/>
+                <polygon class="f f1" points="6,17 27.5,28.5 32,2"/>
+            </g>
+        </svg>
     </div>
 </section>
 {% endblock %}

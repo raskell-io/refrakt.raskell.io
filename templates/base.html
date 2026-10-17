@@ -34,6 +34,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap">
     <link rel="stylesheet" href="{{ get_url(path='style.css', cachebust=true) }}">
     <script>
         // Apply a stored theme choice before first paint; otherwise follow the system.
@@ -69,25 +71,44 @@
     </main>
 
     <footer class="site-footer">
-        <div class="wrap footer-row">
+        <div class="wrap footer-grid">
             <div class="footer-brand">
-                <a class="footer-seal" href="https://raskell.io" title="raskell.io"><img src="{{ get_url(path='img/raskell-stamp.png') }}" alt="The raskell.io seal" width="64" height="64" loading="lazy"></a>
-                <div>
-                    <p class="footer-mark">Refrakt</p>
-                    <p class="muted">A convention-first web framework for Gleam, produced by <a href="https://raskell.io">raskell.io</a>. Free and open source under the MIT license.</p>
-                </div>
+                <a class="footer-logo" href="{{ get_url(path='/') }}" aria-label="Refrakt home">
+                    <img src="{{ get_url(path='img/logo.svg') }}" alt="" width="40" height="40" loading="lazy">
+                    <span>Refrakt</span>
+                </a>
+                <p class="muted">A convention-first web framework for Gleam. Free and open source under the MIT license.</p>
             </div>
-            <nav class="footer-links" aria-label="Footer">
+            <nav class="footer-col" aria-label="Learn">
+                <p class="footer-head">Learn</p>
                 <a href="/getting-started/">Getting started</a>
                 <a href="/cli/">CLI reference</a>
                 <a href="{{ config.extra.docs }}">Guides</a>
-                <a href="{{ config.extra.hexdocs }}">HexDocs</a>
-                <a href="{{ config.extra.hex }}">Hex</a>
-                <a href="{{ config.extra.github }}">GitHub</a>
+                <a href="{{ config.extra.hexdocs }}">API docs</a>
             </nav>
+            <nav class="footer-col" aria-label="Project">
+                <p class="footer-head">Project</p>
+                <a href="{{ config.extra.github }}">GitHub</a>
+                <a href="{{ config.extra.hex }}">Hex package</a>
+                <a href="{{ config.extra.github }}/tree/main/examples">Examples</a>
+                <a href="{{ config.extra.github }}/blob/main/CHANGELOG.md">Changelog</a>
+            </nav>
+        </div>
+        <div class="wrap footer-base">
+            <span>© {{ now() | date(format="%Y") }} raskell.io</span>
+            <span class="spectrum-dots" aria-hidden="true"><i></i><i></i><i></i></span>
         </div>
     </footer>
     <script>
+        document.querySelectorAll("[data-copy]").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                var text = document.getElementById(btn.dataset.copy).textContent;
+                navigator.clipboard.writeText(text).then(function () {
+                    btn.textContent = "Copied";
+                    setTimeout(function () { btn.textContent = "Copy"; }, 1500);
+                });
+            });
+        });
         function toggleTheme() {
             var root = document.documentElement;
             var current = root.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
