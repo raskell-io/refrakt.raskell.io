@@ -9,14 +9,23 @@ next = { title = "Getting started", url = "/getting-started/" }
 
 ## Running the CLI
 
-The CLI is the `refrakt/cli` module of the `refrakt` package. Run it from a Gleam project that depends on `refrakt`; projects made by `refrakt new` do.
+The CLI is the `refrakt_cli` package, a dev-dependency of every project made by `refrakt new`. Run it from inside the project:
 
 ```sh
-gleam run -m refrakt/cli -- <command>
+gleam run -m refrakt_cli -- <command>
 
 # or, with an alias
-alias refrakt='gleam run -m refrakt/cli --'
+alias refrakt='gleam run -m refrakt_cli --'
 refrakt <command>
+```
+
+To create your first project, run it from a throwaway one:
+
+```sh
+gleam new refrakt_bootstrap && cd refrakt_bootstrap
+gleam add --dev refrakt_cli
+gleam run -m refrakt_cli -- new ../my_app --db sqlite
+cd ../my_app && rm -rf ../refrakt_bootstrap
 ```
 
 Commands that work on an existing project read the app name from `gleam.toml` and detect the database from its dependencies (`pog` for PostgreSQL, `sqlight` for SQLite). Everything a generator writes is run through `gleam format`.
@@ -53,7 +62,7 @@ refrakt new path/to/my_app    # the package is named my_app
 | `--db sqlite` | Add Sqlight and a `data/repo.gleam` for SQLite |
 | none | No database |
 
-Writes the entry point, typed config (`PORT`, `SECRET_KEY_BASE`, `APP_ENV`), the shared `Context`, the router, a home handler, an error handler, the root layout, a flash component, CSS and JS in `priv/static/`, and tests. The router's middleware wraps every request in `refrakt/dev_error.rescue`, which turns a crash into a page showing the error, the stack trace and the request.
+Writes the entry point, typed config (`PORT`, `SECRET_KEY_BASE`, `APP_ENV`), the shared `Context`, the router, a home handler, an error handler, the root layout, a flash component, CSS and JS in `priv/static/`, and tests. When `APP_ENV` is `dev` (the default), the router's middleware turns a crash into a page showing the error, the stack trace and the request; in `test` and `prod` it logs the crash and returns a plain 500. Set `APP_ENV=prod` in production.
 
 ## gen resource
 
@@ -65,6 +74,8 @@ refrakt gen resource posts title:string body:text --api
 ```
 
 The name is plural. Types and files use the singular: `Post`, `post_handler.gleam`, `post_repo.gleam`.
+
+It needs a project created with `--db postgres` or `--db sqlite`; in a project without a database it stops and writes nothing.
 
 **HTML mode** writes:
 
@@ -110,7 +121,7 @@ Writes `web/about_handler.gleam` with an `index` handler and a test, and adds `G
 refrakt gen auth
 ```
 
-Writes the `User` domain type, password hashing in `domain/auth.gleam`, `data/user_repo.gleam`, a users migration, `web/auth_handler.gleam`, `web/auth_views.gleam`, `web/forms/auth_form.gleam`, `web/middleware/auth.gleam` and tests. Adds five routes: `GET` and `POST /login`, `GET` and `POST /register`, `POST /logout`.
+Writes the `User` domain type, password hashing in `domain/auth.gleam`, `data/user_repo.gleam`, a users migration, `web/auth_handler.gleam`, `web/auth_views.gleam`, `web/forms/auth_form.gleam`, `web/middleware/auth.gleam` and tests. Adds five routes: `GET` and `POST /login`, `GET` and `POST /register`, `POST /logout`. Like `gen resource`, it needs a project with a database.
 
 The session is a signed cookie. Protect a handler with the generated middleware:
 
@@ -121,7 +132,7 @@ pub fn create(req: Request, ctx: Context) -> Response {
 }
 ```
 
-The generated `hash_password` is an unsalted SHA-256 placeholder. Swap it for bcrypt or argon2 before production; the command suggests `gleam add beecrypt`.
+Passwords are hashed with Argon2id (random salt per hash, constant-time verify) through the [argus](https://hex.pm/packages/argus) package, which the command adds to `gleam.toml`. Building argus needs a C compiler.
 
 ## gen island
 

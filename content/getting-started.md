@@ -21,17 +21,19 @@ mise use gleam@1.14 erlang@27 rebar@3
 
 ## Install the CLI
 
-Refrakt is one package on Hex. The CLI is its `refrakt/cli` module, so you run it with `gleam run` from any Gleam project that depends on `refrakt`:
+Refrakt comes as two packages on Hex: `refrakt`, the small library your app uses at runtime, and `refrakt_cli`, the code generator. The CLI runs with `gleam run` from inside a Gleam project, so to create your first app, borrow a throwaway project for a moment:
 
 ```sh
-gleam add refrakt
-gleam run -m refrakt/cli -- help
+gleam new refrakt_bootstrap && cd refrakt_bootstrap
+gleam add --dev refrakt_cli
+gleam run -m refrakt_cli -- new ../blog --db postgres
+cd ../blog && rm -rf ../refrakt_bootstrap
 ```
 
-Projects created by `refrakt new` already depend on `refrakt`, so the CLI works inside them too. The rest of this page uses an alias:
+Projects created by `refrakt new` list `refrakt_cli` as a dev-dependency, so from now on the CLI runs inside your app and never ships with it. The rest of this page uses an alias:
 
 ```sh
-alias refrakt='gleam run -m refrakt/cli --'
+alias refrakt='gleam run -m refrakt_cli --'
 ```
 
 ## 1. Create the project
@@ -205,7 +207,7 @@ refrakt gen auth
 | `data/migrations/002_create_users.sql` | The `users` table |
 | `test/blog/web/auth_handler_test.gleam` | Tests |
 
-Sessions are a signed cookie. The generated `hash_password` is a plain SHA-256 placeholder: replace it with a bcrypt or argon2 library before you deploy (the generator suggests `gleam add beecrypt`).
+Sessions are a signed cookie. Passwords are hashed with Argon2id through the [argus](https://hex.pm/packages/argus) package, which `gen auth` adds to your `gleam.toml`; argus compiles a small C library, so building it needs a C compiler.
 
 Run the new migration:
 
