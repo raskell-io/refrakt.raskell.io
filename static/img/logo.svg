@@ -1,14 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Refrakt">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <title>Refrakt</title>
-  <defs>
-    <clipPath id="refrakt-tile"><rect width="64" height="64" rx="14"/></clipPath>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="#1e1433"/>
-  <g clip-path="url(#refrakt-tile)" fill="none">
-    <path d="M-2 45.5 L18 38" stroke="#ffffff" stroke-width="5.5"/>
-    <path d="M30 22 H66" stroke="#ffaff3" stroke-width="6.5"/>
-    <path d="M30 32.5 H66" stroke="#c58cf9" stroke-width="6.5"/>
-    <path d="M30 43 H66" stroke="#8b5cf6" stroke-width="6.5"/>
-    <path d="M26 9.5 L46.5 51 L5.5 51 Z" fill="#f4eeff" stroke="#f4eeff" stroke-width="3" stroke-linejoin="round"/>
+  <style>
+    .f1 { fill: #1b1f3b; stroke: #1b1f3b; }
+    .f2 { fill: #2e3a8c; stroke: #2e3a8c; }
+    @media (prefers-color-scheme: dark) {
+      .f1 { fill: #4651c4; stroke: #4651c4; }
+      .f2 { fill: #3346b8; stroke: #3346b8; }
+    }
+  </style>
+  <g stroke-width="0.6" stroke-linejoin="round">
+    <polygon class="f2" points="32,2 27.5,28.5 58,17"/>
+    <polygon points="58,17 27.5,28.5 58,47" fill="#3f7cff" stroke="#3f7cff"/>
+    <polygon points="58,47 27.5,28.5 32,62" fill="#7ee0ff" stroke="#7ee0ff"/>
+    <polygon points="32,62 27.5,28.5 6,47" fill="#c3b5ff" stroke="#c3b5ff"/>
+    <polygon points="6,47 27.5,28.5 6,17" fill="#ffaff3" stroke="#ffaff3"/>
+    <polygon class="f1" points="6,17 27.5,28.5 32,2"/>
   </g>
 </svg>
