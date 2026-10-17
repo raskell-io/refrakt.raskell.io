@@ -1,7 +1,7 @@
 # Code tour on the home page. Every snippet is copied from the output of
 #   refrakt new blog --db postgres
 #   refrakt gen resource posts title:string body:text published:bool
-# (refrakt_cli 0.5.0). Regenerate and re-paste when the templates change.
+# (refrakt_cli 0.6.0). Regenerate and re-paste when the templates change.
 
 [[step]]
 file = "src/blog/router.gleam"
@@ -53,9 +53,9 @@ pub fn create(req: Request, ctx: Context) -> Response {
 [[step]]
 file = "src/blog/web/post_views.gleam"
 title = "Views are Lustre functions"
-text = "Views take data and return Element(Nil). No template language, no Wisp imports: the compiler checks your HTML like any other Gleam code."
+text = "Views take data and return Element(Nil). No template language, no Wisp imports: the compiler checks your HTML like any other Gleam code. The index view gets one page of posts and renders the Previous/Next links."
 code = '''
-pub fn index_view(items: List(Post)) -> Element(Nil) {
+pub fn index_view(page: paginate.Page(Post)) -> Element(Nil) {
   section([class("posts")], [
     div([class("header")], [
       h1([], [text("Posts")]),
@@ -63,7 +63,7 @@ pub fn index_view(items: List(Post)) -> Element(Nil) {
     ]),
     ul(
       [class("post-list")],
-      list.map(items, fn(item) {
+      list.map(page.items, fn(item) {
         li([], [
           a([href("/posts/" <> int.to_string(item.id))], [
             text(item.title),
@@ -71,6 +71,7 @@ pub fn index_view(items: List(Post)) -> Element(Nil) {
         ])
       }),
     ),
+    pagination(page),
   ])
 }'''
 
@@ -104,16 +105,33 @@ pub fn decode(
 [[step]]
 file = "src/blog/domain/post.gleam  ·  src/blog/data/post_repo.gleam"
 title = "Domain types stay pure, repos speak SQL"
-text = "The domain module has no framework or database imports. The repo is raw SQL through Pog (or Sqlight) with a typed decoder, and returns domain types."
+text = "The domain module has no framework or database imports. The repo is raw SQL through Pog (or Sqlight) with a typed decoder, returns domain types, and pages through the table newest first."
 code = '''
 pub type Post {
   Post(id: Int, title: String, body: String, published: Bool)
 }
 
-pub fn list(db: pog.Connection) -> List(Post) {
-  pog.query("SELECT id, title, body, published FROM posts ORDER BY id DESC")
-  |> pog.returning(post_decoder())
-  |> pog.execute(db)
-  |> result.map(fn(r) { r.rows })
-  |> result.unwrap([])
+pub fn list(
+  db: pog.Connection,
+  params: paginate.Params,
+) -> paginate.Page(Post) {
+  let items =
+    pog.query(
+      "SELECT id, title, body, published FROM posts ORDER BY id DESC LIMIT $1 OFFSET $2",
+    )
+    |> pog.parameter(pog.int(params.per_page))
+    |> pog.parameter(pog.int(paginate.offset(params)))
+    |> pog.returning(post_decoder())
+    |> pog.execute(db)
+    |> result.map(fn(r) { r.rows })
+    |> result.unwrap([])
+  let total = case
+    pog.query("SELECT COUNT(*) FROM posts")
+    |> pog.returning(decode.at([0], decode.int))
+    |> pog.execute(db)
+  {
+    Ok(pog.Returned(rows: [count], ..)) -> count
+    _ -> 0
+  }
+  paginate.page(items, params, total)
 }'''

@@ -93,6 +93,8 @@ It needs a project created with `--db postgres` or `--db sqlite`; in a project w
 
 and adds seven routes to the router: `GET /posts`, `GET /posts/new`, `POST /posts`, `GET /posts/:id`, `GET /posts/:id/edit`, `PUT /posts/:id`, `DELETE /posts/:id`.
 
+The index page is paginated, newest first: `/posts?page=2` shows the second page of 20 (the `per_page` constant in the handler), with Previous and Next links and "Page 2 of N". A missing or invalid page number means page 1.
+
 **`--api`** writes a JSON handler, a params type, the domain type, the repo, the migration and tests, with no views or forms. It adds five routes under `/api/`: `GET` and `POST /api/posts`, and `GET`, `PUT`, `DELETE /api/posts/:id`. All five handlers are complete. `create` and `update` decode the JSON body, validate it with the same rules as the HTML form, and answer:
 
 | Case | Status |
@@ -104,7 +106,19 @@ and adds seven routes to the router: `GET /posts`, `GET /posts/new`, `POST /post
 | unknown id | 404, `{"error": "not found"}` |
 | deleted | 204 |
 
-**`--belongs-to <parent>`** adds an `int` foreign key field named after the singular parent, such as `post_id`.
+The index takes `?page=` and `?per_page=` (1 to 100) and wraps the records in an envelope:
+
+```json
+{"data": [...], "page": 2, "per_page": 50, "total": 57, "total_pages": 2}
+```
+
+**`--belongs-to <parent>`** relates the resource to an existing one. For `comments ... --belongs-to posts`:
+
+- the migration adds `post_id INTEGER NOT NULL REFERENCES posts(id) ON DELETE CASCADE` and an index, so deleting a post deletes its comments
+- the form gets a select of posts, and `/comments/new?post_id=3` preselects one; a post that doesn't exist is a 422
+- the repo gets `list_for_post(db, post_id)`, and a `comment_list` component shows a post's comments on its page
+
+Routes stay flat (`/comments/:id`). The parent resource must exist first, or the command stops and writes nothing.
 
 ### Field types
 
@@ -117,8 +131,11 @@ and adds seven routes to the router: `GET /posts`, `GET /posts/new`, `POST /post
 | `bool` | `Bool` | checkbox | `BOOLEAN` | `INTEGER` |
 | `date` | `String` | text | `DATE` | `TEXT` |
 | `datetime` | `String` | text | `TIMESTAMPTZ` | `TEXT` |
+| `optional(T)` | `Option(T)` | as `T` | nullable column | nullable column |
 
-`string` and `text` fields get a `validate.required` check in the form decoder. Other types are parsed but not validated; add your own checks.
+`string` and `text` fields get a `validate.required` check in the form decoder. Number fields must parse, or the form answers 422.
+
+Wrap a type in `optional(...)` for a field that may be empty, and quote it for the shell: `'price:optional(float)'`. A blank input is stored as `NULL` and shown as "—"; in the JSON API it is `null`. An `optional(bool)` is a select with a blank, Yes and No, since a checkbox can't say "not set".
 
 ## gen page
 

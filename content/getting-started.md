@@ -262,18 +262,21 @@ pub fn index(_req: Request, _ctx: Context) -> Response {
 
 ## 10. Run the tests
 
+The tests that touch the database use a separate test database. Create it once:
+
 ```sh
+createdb blog_test
 gleam test
 ```
 
-The generated tests check that an empty form has no ID, that valid form data decodes, that missing required fields return errors, and that password hashing round-trips.
+Each test runs inside a transaction that is rolled back afterwards, so the test database stays empty. The generated tests create, show, update and delete a post through the router, register and log in a user, check that invalid forms and cross-site requests are rejected, and check that password hashing round-trips. Set `DATABASE_URL` to use a different test database.
 
 ## What you have
 
 - Seven post routes with forms and validation
 - Five auth routes: register, login, logout
 - An about page
-- Raw SQL you can read, Lustre views the compiler checks, tests for the decoders
+- Raw SQL you can read, Lustre views the compiler checks, and tests that run against a real database
 
 Every file is plain Gleam that you own. From here:
 
