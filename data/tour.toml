@@ -1,0 +1,119 @@
+# Code tour on the home page. Every snippet is copied from the output of
+#   refrakt new blog --db postgres
+#   refrakt gen resource posts title:string body:text published:bool
+# (refrakt 0.2.0). Regenerate and re-paste when the templates change.
+
+[[step]]
+file = "src/blog/router.gleam"
+title = "The router is a pattern match"
+text = "All routes live in one file. Each route is a case branch on the path segments and the HTTP method. Generators add their routes above the catch-all, with /new before /:id."
+code = '''
+pub fn handle_request(req: Request, ctx: Context) -> Response {
+  use req <- middleware(req)
+
+  case wisp.path_segments(req), req.method {
+    [], http.Get -> home_handler.index(req, ctx)
+
+    ["posts"], http.Get -> post_handler.index(req, ctx)
+    ["posts", "new"], http.Get -> post_handler.new(req, ctx)
+    ["posts"], http.Post -> post_handler.create(req, ctx)
+    ["posts", id], http.Get -> post_handler.show(req, ctx, id)
+    ["posts", id, "edit"], http.Get -> post_handler.edit(req, ctx, id)
+    ["posts", id], http.Put -> post_handler.update(req, ctx, id)
+    ["posts", id], http.Delete -> post_handler.delete(req, ctx, id)
+    _, _ -> error_handler.not_found(req)
+  }
+}'''
+
+[[step]]
+file = "src/blog/web/post_handler.gleam"
+title = "Handlers are plain functions"
+text = "Request first, context second, route parameters after. A handler parses input, calls the repo, and renders a view inside the layout. Invalid forms re-render with a 422; success redirects with a flash message."
+code = '''
+pub fn create(req: Request, ctx: Context) -> Response {
+  use form_data <- wisp.require_form(req)
+
+  case post_form.decode(form_data) {
+    Error(errors) ->
+      post_views.form_view(post_form.from_form_data(form_data), errors)
+      |> root_layout.wrap("New Post")
+      |> wisp.html_response(422)
+
+    Ok(params) ->
+      case post_repo.create(ctx.db, params) {
+        Ok(item) ->
+          wisp.redirect("/posts/" <> int.to_string(item.id))
+          |> flash.set_flash(req, "info", "Post created")
+
+        Error(_) -> error_handler.internal_error(req)
+      }
+  }
+}'''
+
+[[step]]
+file = "src/blog/web/post_views.gleam"
+title = "Views are Lustre functions"
+text = "Views take data and return Element(Nil). No template language, no Wisp imports: the compiler checks your HTML like any other Gleam code."
+code = '''
+pub fn index_view(items: List(Post)) -> Element(Nil) {
+  section([class("posts")], [
+    div([class("header")], [
+      h1([], [text("Posts")]),
+      a([href("/posts/new"), class("btn")], [text("New Post")]),
+    ]),
+    ul(
+      [class("post-list")],
+      list.map(items, fn(item) {
+        li([], [
+          a([href("/posts/" <> int.to_string(item.id))], [
+            text(item.title),
+          ]),
+        ])
+      }),
+    ),
+  ])
+}'''
+
+[[step]]
+file = "src/blog/web/forms/post_form.gleam"
+title = "Forms decode into typed params"
+text = "Each form has a PostForm for re-rendering and a PostParams for clean input. Validation is a pipeline of refrakt/validate functions, and errors are a list of field and message pairs."
+code = '''
+pub fn decode(
+  data: wisp.FormData,
+) -> Result(PostParams, List(#(String, String))) {
+  let title = get_value(data, "title")
+  let body = get_value(data, "body")
+
+  let errors =
+    []
+    |> validate.required(title, "title", "Title is required")
+    |> validate.required(body, "body", "Body is required")
+
+  case errors {
+    [] ->
+      Ok(PostParams(
+        title: title,
+        body: body,
+        published: list.any(data.values, fn(v) { v.0 == "published" }),
+      ))
+    _ -> Error(errors)
+  }
+}'''
+
+[[step]]
+file = "src/blog/domain/post.gleam  ·  src/blog/data/post_repo.gleam"
+title = "Domain types stay pure, repos speak SQL"
+text = "The domain module has no framework or database imports. The repo is raw SQL through Pog (or Sqlight) with a typed decoder, and returns domain types."
+code = '''
+pub type Post {
+  Post(id: Int, title: String, body: String, published: Bool)
+}
+
+pub fn list(db: pog.Connection) -> List(Post) {
+  pog.query("SELECT id, title, body, published FROM posts ORDER BY id DESC")
+  |> pog.returning(post_decoder())
+  |> pog.execute(db)
+  |> result.map(fn(r) { r.rows })
+  |> result.unwrap([])
+}'''

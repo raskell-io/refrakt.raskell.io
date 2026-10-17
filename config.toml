@@ -1,0 +1,41 @@
+# Zola configuration for the Refrakt website
+# https://www.getzola.org/documentation/getting-started/configuration/
+
+base_url = "https://refrakt.raskell.io"
+title = "Refrakt"
+description = "A convention-first web framework for Gleam. Productive like Phoenix, explicit like Gleam, composable with Wisp and Lustre."
+default_language = "en"
+
+compile_sass = true
+minify_html = true
+build_search_index = false
+generate_feeds = false
+
+[markdown]
+smart_punctuation = true
+external_links_target_blank = true
+external_links_no_referrer = true
+# Highlighting emits class names only; the colours live in sass/style.scss
+# (Zola still writes giallo-*.css into static/; they are git-ignored and unused).
+highlighting = { enabled = true, style = "class", light_theme = "github-light", dark_theme = "github-dark" }
+
+[slugify]
+paths = "on"
+anchors = "on"
+
+[extra]
+author = "raskell.io"
+pitch = "A convention-first web framework for Gleam"
+tagline = "Productive like Phoenix, explicit like Gleam, composable with Wisp and Lustre."
+version = "0.2.0"
+github = "https://github.com/raskell-io/refrakt"
+hex = "https://hex.pm/packages/refrakt"
+hexdocs = "https://hexdocs.pm/refrakt"
+docs = "https://github.com/raskell-io/refrakt/tree/main/docs"
+keywords = "Refrakt, Gleam, web framework, BEAM, Erlang, Wisp, Lustre, Mist, code generator, CRUD, Phoenix, convention over configuration"
+
+nav_links = [
+    { name = "Getting started", url = "/getting-started/" },
+    { name = "CLI", url = "/cli/" },
+    { name = "Docs", url = "https://github.com/raskell-io/refrakt/tree/main/docs" },
+]

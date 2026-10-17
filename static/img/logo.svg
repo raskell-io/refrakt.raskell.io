@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Refrakt">
+  <title>Refrakt</title>
+  <defs>
+    <clipPath id="refrakt-tile"><rect width="64" height="64" rx="14"/></clipPath>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#1e1433"/>
+  <g clip-path="url(#refrakt-tile)" fill="none">
+    <path d="M-2 45.5 L18 38" stroke="#ffffff" stroke-width="5.5"/>
+    <path d="M30 22 H66" stroke="#ffaff3" stroke-width="6.5"/>
+    <path d="M30 32.5 H66" stroke="#c58cf9" stroke-width="6.5"/>
+    <path d="M30 43 H66" stroke="#8b5cf6" stroke-width="6.5"/>
+    <path d="M26 9.5 L46.5 51 L5.5 51 Z" fill="#f4eeff" stroke="#f4eeff" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap article-wrap not-found">
+    <p class="eyebrow">404</p>
+    <h1>No route matched</h1>
+    <p class="lead">This request fell through to the catch-all.</p>
+{{ "```gleam
+_, _ -> error_handler.not_found(req)
+```" | markdown | safe }}
+    <p class="actions"><a class="btn btn-primary" href="/">Back home</a> <a class="btn btn-ghost" href="/getting-started/">Getting started</a></p>
+</section>
+{% endblock %}
