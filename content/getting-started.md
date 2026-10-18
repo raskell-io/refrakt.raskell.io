@@ -282,7 +282,8 @@ Every file is plain Gleam that you own. From here:
 
 - Edit the CSS in `priv/static/css/app.css`
 - Add a second resource: `refrakt gen resource comments body:text --belongs-to posts`
-- Run `refrakt dev`: with [fswatch](https://github.com/emcrisostomo/fswatch) installed it rebuilds and restarts on every change in `src/`
-- Build a release with `gleam export erlang-shipment`; the [deployment guide](https://github.com/raskell-io/refrakt/blob/main/docs/deployment.md) covers Vela, Docker and Fly.io
+- Run `refrakt dev`: it rebuilds on every change and your browser reloads by itself
+- Deploy with `refrakt gen deploy --fly`, which writes a Dockerfile and `fly.toml`; the [deployment guide](https://github.com/raskell-io/refrakt/blob/main/docs/deployment.md) has the details
+- After upgrading Refrakt, run `refrakt diff` to see what changed in the templates
 
 The complete result is in the repository as [`examples/blog`](https://github.com/raskell-io/refrakt/tree/main/examples/blog).

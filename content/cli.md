@@ -39,12 +39,14 @@ Commands that work on an existing project read the app name from `gleam.toml` an
 | [`gen island <name>`](#gen-island) | A Lustre client-side island |
 | [`gen live <name>`](#gen-live) | A Lustre server component over WebSocket |
 | [`gen migration <name>`](#gen-migration) | An empty SQL migration |
+| [`gen deploy`](#gen-deploy) | Dockerfile, `bin/migrate`, and `fly.toml` with `--fly` |
 | [`routes`](#routes) | Print the route table |
+| [`diff`](#diff) | Compare the app with what the current CLI generates |
 | [`migrate`](#migrate) | Run pending migrations |
 | [`seed`](#seed) | Run database seeds |
 | [`build`](#build) | Compile islands to JavaScript |
 | [`assets setup`, `assets build`](#assets) | Tailwind CSS setup and build |
-| [`dev`](#dev) | Dev server, rebuilds on change |
+| [`dev`](#dev) | Dev server with live reload |
 | [`help`, `version`](#help-and-version) | |
 
 ## new
@@ -188,6 +190,30 @@ refrakt gen migration add_email_to_posts
 
 Writes an empty, numbered SQL file such as `data/migrations/003_add_email_to_posts.sql`. The number is the next one in the directory.
 
+## gen deploy
+
+```sh
+refrakt gen deploy
+refrakt gen deploy --fly
+```
+
+Writes a two-stage `Dockerfile` (the Gleam image builds an Erlang shipment; a slim Erlang image runs it as a non-root user with `APP_ENV=prod`), a `.dockerignore`, a `bin/migrate` script that runs your migrations inside the image, and a `GET /healthz` route if the app has no health route yet. With `--fly` it also writes `fly.toml`.
+
+- **SQLite:** the database lives on a volume at `/data`, and the container applies pending migrations when it starts.
+- **PostgreSQL:** set `DATABASE_URL` and run `bin/migrate` before a release; on Fly it is the `release_command`.
+
+Pass `SECRET_KEY_BASE` at runtime; the app refuses to start without it. Existing files are never overwritten. CI builds and runs this image for SQLite and PostgreSQL on every change.
+
+## diff
+
+```sh
+refrakt diff
+refrakt diff src/blog/router.gleam
+refrakt diff --stat
+```
+
+Generates what the installed `refrakt_cli` would write for your app into a temporary folder and shows a unified diff against your files, so after upgrading you can see which template improvements you don't have yet. It replays the generators recorded in `.refrakt/generated.toml` (apps from before 0.7 are inferred from their files), never changes your app, and exits with 1 when generated files differ, so it also works in CI. The upgrade path is: bump the dependencies, run `refrakt diff`, and copy over what you want.
+
 ## routes
 
 ```sh
@@ -242,7 +268,9 @@ refrakt assets build
 refrakt dev
 ```
 
-Sets `APP_ENV=dev` and runs `gleam run`. If [fswatch](https://github.com/emcrisostomo/fswatch) is installed, it watches `src/` and rebuilds and restarts the server on every change.
+Sets `APP_ENV=dev`, runs the app, and watches `src/` and `priv/`. On a change it rebuilds first: if the build fails, it prints the compiler error and the previous server keeps running. If it succeeds, it restarts the server and open pages reload by themselves. A change under `priv/` reloads pages without a rebuild.
+
+It uses [fswatch](https://github.com/emcrisostomo/fswatch) when installed, `inotifywait` on Linux, and otherwise polls every 500ms; startup says which. Live reload runs on a separate port (`REFRAKT_LIVE_RELOAD_PORT`, default 35729) served by `refrakt dev` itself, and the script in the layout renders only in development, so production pages are unchanged.
 
 ## help and version
 

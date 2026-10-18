@@ -1,7 +1,7 @@
 # Code tour on the home page. Every snippet is copied from the output of
 #   refrakt new blog --db postgres
 #   refrakt gen resource posts title:string body:text published:bool
-# (refrakt_cli 0.6.0). Regenerate and re-paste when the templates change.
+# (refrakt_cli 0.7.0). Regenerate and re-paste when the templates change.
 
 [[step]]
 file = "src/blog/router.gleam"
