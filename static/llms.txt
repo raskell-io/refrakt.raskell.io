@@ -1,0 +1,40 @@
+# Refrakt
+
+> A convention-first web framework for Gleam: productive like Phoenix, explicit like Gleam, composable with Wisp and Lustre.
+
+Refrakt is a web framework for Gleam on the BEAM, built on Wisp, Lustre and Mist. It is for developers who want one obvious way to build server-rendered web apps in Gleam. It ships as two Hex packages: the `refrakt` runtime library that apps depend on, and the `refrakt_cli` code generator that apps list as a dev-dependency. The generator creates new projects (PostgreSQL, SQLite or no database) and full CRUD resources, for example `refrakt gen resource posts title:string body:text published:bool` writes a handler, Lustre views, typed form validation, a repo with raw SQL, a migration and tests, and wires the routes into the router. Generated code is plain Gleam that you own; there are no macros. Refrakt needs Gleam 1.14 or later and Erlang/OTP 27 or later. It is free and open source under the MIT license.
+
+## Links
+
+- [Website](https://refrakt.raskell.io/): overview and a code tour of generated output
+- [Getting started](https://refrakt.raskell.io/getting-started/): install Refrakt and build a blog with posts, authentication and an about page
+- [CLI reference](https://refrakt.raskell.io/cli/): every refrakt command, what it writes, and what it changes in your project
+- [Source code](https://github.com/raskell-io/refrakt): GitHub repository, MIT license
+- [Documentation](https://github.com/raskell-io/refrakt/tree/main/docs): guides and reference in the repository
+- [API docs](https://hexdocs.pm/refrakt): HexDocs for the refrakt package
+- [Hex package](https://hex.pm/packages/refrakt)
+- [raskell.io projects](https://raskell.io/projects/): Refrakt in the list of raskell.io projects
+- [Author](https://raskell.io/about/): Raffael Schneider
+
+## Docs
+
+- [Installation](https://github.com/raskell-io/refrakt/blob/main/docs/installation.md): install Refrakt and create your first project
+- [Tutorial: Build a Blog](https://github.com/raskell-io/refrakt/blob/main/docs/tutorial.md): step by step from `refrakt new` to a working app
+- [Project Structure](https://github.com/raskell-io/refrakt/blob/main/docs/project-structure.md): the directory layout and its conventions
+- [Routing](https://github.com/raskell-io/refrakt/blob/main/docs/routing.md): routes as Gleam pattern matching in one router file, route parameters
+- [Handlers](https://github.com/raskell-io/refrakt/blob/main/docs/handlers.md): request handling, responses, middleware
+- [Views and Templates](https://github.com/raskell-io/refrakt/blob/main/docs/views.md): Lustre HTML functions, layouts, components
+- [Forms and Validation](https://github.com/raskell-io/refrakt/blob/main/docs/forms.md): typed form decoding, validation helpers, error display
+- [Database](https://github.com/raskell-io/refrakt/blob/main/docs/database.md): PostgreSQL and SQLite setup, repos, migrations
+- [Authentication](https://github.com/raskell-io/refrakt/blob/main/docs/authentication.md): the generated auth system, sessions, middleware
+- [Testing](https://github.com/raskell-io/refrakt/blob/main/docs/testing.md): test helpers and handler tests
+- [Deployment](https://github.com/raskell-io/refrakt/blob/main/docs/deployment.md): building for production and environment configuration
+- [CLI Commands](https://github.com/raskell-io/refrakt/blob/main/docs/cli.md): all commands and flags
+- [Configuration](https://github.com/raskell-io/refrakt/blob/main/docs/configuration.md): config.gleam and environment variables
+- [Field Types](https://github.com/raskell-io/refrakt/blob/main/docs/field-types.md): field types available for `gen resource`
+
+## Optional
+
+- [Lustre Integration](https://github.com/raskell-io/refrakt/blob/main/docs/lustre-integration.md): interactive islands and server components
+- [Examples](https://github.com/raskell-io/refrakt/tree/main/examples): example applications
+- [Changelog](https://github.com/raskell-io/refrakt/blob/main/CHANGELOG.md)

@@ -23,6 +23,46 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="Raffael Schneider">
+    <link rel="alternate" type="text/markdown" title="llms.txt" href="{{ get_url(path='llms.txt') }}">
+    {%- if current_path is defined and current_path == "/" %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["SoftwareApplication", "SoftwareSourceCode"],
+          "@id": "{{ config.base_url | safe }}/#software",
+          "name": "{{ config.title }}",
+          "description": {{ config.extra.ld_description | json_encode() | safe }},
+          "url": "{{ config.base_url | safe }}/",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Any system that runs Erlang/OTP 27 or later",
+          "programmingLanguage": "Gleam",
+          "runtimePlatform": "Erlang/OTP (BEAM)",
+          "softwareVersion": "{{ config.extra.version }}",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+          "isAccessibleForFree": true,
+          "license": "https://opensource.org/licenses/MIT",
+          "codeRepository": "{{ config.extra.github | safe }}",
+          "sameAs": ["{{ config.extra.github | safe }}", "https://raskell.io/projects/"],
+          "inLanguage": "en",
+          "author": { "@type": "Person", "@id": "https://raskell.io/#person", "name": "Raffael Schneider", "url": "https://raskell.io/" },
+          "creator": { "@type": "Person", "@id": "https://raskell.io/#person", "name": "Raffael Schneider", "url": "https://raskell.io/" }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "{{ config.base_url | safe }}/#website",
+          "name": "{{ config.title }}",
+          "url": "{{ config.base_url | safe }}/",
+          "inLanguage": "en",
+          "about": { "@id": "{{ config.base_url | safe }}/#software" },
+          "publisher": { "@id": "https://raskell.io/#person" }
+        }
+      ]
+    }
+    </script>
+    {%- endif %}
     {%- endblock meta %}
     <meta name="theme-color" content="#fffbe8" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#292d3e" media="(prefers-color-scheme: dark)">
@@ -94,7 +134,7 @@
             </nav>
         </div>
         <div class="wrap footer-base">
-            <span>© {{ now() | date(format="%Y") }} Refrakt contributors · MIT license</span>
+            <span>© {{ now() | date(format="%Y") }} Refrakt contributors · MIT license · by <a href="https://raskell.io/" rel="author">Raffael Schneider</a></span>
             <span class="spectrum-dots" aria-hidden="true"><i></i><i></i><i></i></span>
         </div>
     </footer>

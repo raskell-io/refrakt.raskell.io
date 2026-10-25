@@ -1286,6 +1286,14 @@ code[data-lang="shellscript"] .z-string {
     border-top: 1px solid var(--line);
     color: var(--muted);
     font-size: 0.85rem;
+
+    a {
+        color: inherit;
+
+        &:hover {
+            color: var(--text);
+        }
+    }
 }
 
 .spectrum-dots {
